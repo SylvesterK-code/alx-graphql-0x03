@@ -760,3 +760,136 @@ components/ErrorBoundary.tsx ✅
 pages/_app.tsx ✅
 
 README.md (document what you did) ✅
+
+
+
+
+I have in this inside _app.tsx file from the previous project (alx-graphql-0x02)
+import "@/styles/globals.css";
+import type { AppProps } from "next/app";
+import { ApolloProvider } from "@apollo/client";
+import client from "@/graphql/apolloClient";
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <ApolloProvider client={client}>
+      <Component {...pageProps} />
+    </ApolloProvider>
+  );
+}
+
+ChatGPT said:
+
+Perfect 👍 since you already have your _app.tsx set up in alx-graphql-0x02, for alx-graphql-0x03 the only thing you need to do is wrap your app with the ErrorBoundary component you just created.
+
+Here’s how your updated _app.tsx should look:
+
+import "@/styles/globals.css";
+import type { AppProps } from "next/app";
+import { ApolloProvider } from "@apollo/client";
+import client from "@/graphql/apolloClient";
+import ErrorBoundary from "@/components/ErrorBoundary";
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <ApolloProvider client={client}>
+      <ErrorBoundary>
+        <Component {...pageProps} />
+      </ErrorBoundary>
+    </ApolloProvider>
+  );
+}
+
+✅ Explanation:
+
+ErrorBoundary is imported from components/ErrorBoundary.tsx.
+
+It wraps your entire app (Component {...pageProps}), so any errors inside your pages or components will be caught and handled by it.
+
+If an error occurs, users will see "Oops, there is an error!" with a retry button instead of a blank screen or crash.
+
+👉 Do you want me to also show you how to intentionally trigger an error (for testing your ErrorBoundary), so you can confirm it’s working in the browser?
+
+You said:
+
+
+
+
+
+Task 1. Wrap the Application with ErrorBoundary
+-------------------------------------------------------------------------------------------------------
+mandatory
+Objective: Integrate the ErrorBoundary component into your Next.js application by wrapping the main component.
+
+Instructions:
+
+Open thepages/_app.tsx file.
+
+Import the ErrorBoundary component.
+
+Wrap the Component prop in the ErrorBoundary:
+
+import ErrorBoundary from '@/components/ErrorBoundary';
+import type { AppProps } from "next/app";
+
+
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <ErrorBoundary>
+      <Component {...pageProps} />
+    </ErrorBoundary>
+  );
+}
+
+export default MyApp;
+
+Save and close your files
+Run npm run dev from the terminal
+From a tab in your browser type http://localhost:3000 to see the changes made.
+Repo:
+
+GitHub repository: alx-graphql-0x03
+Directory: alx-rick-and-morty-app
+File: README.md, pages/_app.tsx,
+ChatGPT said:
+
+Great 👍 You’ve got it.
+
+For alx-graphql-0x03, the task is simply to wrap your app with the ErrorBoundary component.
+
+Here’s exactly what your pages/_app.tsx should look like (following the instructions you pasted):
+
+import "@/styles/globals.css";
+import type { AppProps } from "next/app";
+import ErrorBoundary from "@/components/ErrorBoundary";
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <ErrorBoundary>
+      <Component {...pageProps} />
+    </ErrorBoundary>
+  );
+}
+
+export default MyApp;
+
+✅ Steps Recap:
+
+Open pages/_app.tsx.
+
+Import the ErrorBoundary.
+
+Wrap <Component {...pageProps} /> inside <ErrorBoundary>...</ErrorBoundary>.
+
+Save the file.
+
+Run the app with:
+
+npm run dev
+
+
+Open http://localhost:3000
+ to verify.
+
+⚡ Since you already had ApolloProvider in your previous project, here you only need to follow the instructions exactly (without ApolloProvider).
