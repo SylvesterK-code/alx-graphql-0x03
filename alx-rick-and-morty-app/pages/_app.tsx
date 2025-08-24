@@ -27,7 +27,8 @@
 
 
 
-// // alx-graphql-0x03
+// // alx-graphql-0x03 
+// compoents/ErrorBoundary.tsx
 
 // import type { AppProps } from "next/app";
 // import ErrorBoundary from "@/components/ErrorBoundary";
