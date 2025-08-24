@@ -893,3 +893,334 @@ Open http://localhost:3000
  to verify.
 
 ⚡ Since you already had ApolloProvider in your previous project, here you only need to follow the instructions exactly (without ApolloProvider).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Task 2. Create a Component to Test ErrorBoundary
+-------------------------------------------------------------------------------------------------------
+mandatory
+Objective: Develop a simple component that intentionally throws an error to test the ErrorBoundary functionality.
+
+Instructions:
+
+Create a new file named ErrorProneComponent.tsx in the components directory.
+Implement a functional component that throws an error when rendered:
+const ErrorProneComponent: React.FC = () => {
+  throw new Error('This is a test error!');
+};
+
+export default ErrorProneComponent;
+
+In any of your pages (e.g., pages/index.tsx), import and use the ErrorProneComponent within the ErrorBoundary to trigger the error:
+
+import ErrorBoundary from '@/components/ErrorBoundary';
+import ErrorProneComponent from '@/components/ErrorProneComponent';
+
+const Home: React.FC = () => {
+  return (
+    <ErrorBoundary>
+      <ErrorProneComponent />
+    </ErrorBoundary>
+  );
+};
+
+export default Home;
+
+Save and close your files
+Run npm run dev from the terminal
+From a tab in your browser type http://localhost:3000 to see the changes made.
+Repo:
+
+GitHub repository: alx-graphql-0x03
+Directory: alx-rick-and-morty-app
+File: README.md, components/ErrorProneComponent.tsx,
+ChatGPT said:
+
+Perfect ✅ Let’s walk through Task 2: Create a Component to Test ErrorBoundary step by step:
+
+✅ Step 1: Create ErrorProneComponent.tsx
+
+Inside your components directory, create a file named ErrorProneComponent.tsx:
+
+// components/ErrorProneComponent.tsx
+import React from "react";
+
+const ErrorProneComponent: React.FC = () => {
+  throw new Error("This is a test error!");
+};
+
+export default ErrorProneComponent;
+
+✅ Step 2: Import & Use in pages/index.tsx
+
+Open your pages/index.tsx file and wrap the error-prone component with ErrorBoundary:
+
+// pages/index.tsx
+import React from "react";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import ErrorProneComponent from "@/components/ErrorProneComponent";
+
+const Home: React.FC = () => {
+  return (
+    <ErrorBoundary>
+      <ErrorProneComponent />
+    </ErrorBoundary>
+  );
+};
+
+export default Home;
+
+✅ Step 3: Run the Project
+
+In your terminal:
+
+npm run dev
+
+
+Go to 👉 http://localhost:3000
+
+✅ Expected Result
+
+You should not see a blank crash screen.
+Instead, the error will be caught by your ErrorBoundary and the fallback UI (defined in ErrorBoundary.tsx) will be displayed.
+
+Do you want me to also write a sample ErrorBoundary.tsx file (with a nice fallback UI) so that your app doesn’t just silently fail?
+
+You said:
+i have this in pages/index.tsx from the previous project (alx-graphql-0x02)
+
+import { useQuery } from "@apollo/client"
+import { GET_EPISODES } from "@/graphql/queries"
+import { EpisodeProps } from "@/interfaces"
+import EpisodeCard from "@/components/common/EpisodeCard"
+import { useEffect, useState } from "react"
+
+const Home: React.FC = () => {
+  const [page, setPage] = useState<number>(1)
+  const { loading, error, data, refetch } = useQuery(GET_EPISODES, {
+    variables: { page }
+  })
+
+  useEffect(() => {
+    refetch()
+  }, [page, refetch])
+
+  if (loading) return <h1>Loading...</h1>
+  if (error) return <h1>Error</h1>
+
+  const results = data?.episodes.results
+  const info = data?.episodes.info
+
+  return (
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#A3D5E0] to-[#F4F4F4] text-gray-800">
+      {/* Header */}
+      <header className="bg-[#4CA1AF] text-white py-6 text-center shadow-md">
+        <h1 className="text-4xl font-bold tracking-wide">Rick and Morty Episodes</h1>
+        <p className="mt-2 text-lg italic">Explore the multiverse of adventures!</p>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-grow p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {results && results.map(({ id, name, air_date, episode }: EpisodeProps, key: number) => (
+            <EpisodeCard
+              id={id}
+              name={name}
+              air_date={air_date}
+              episode={episode}
+              key={key}
+            />
+          ))}
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-between mt-6">
+          <button 
+            onClick={() => setPage(prev => prev > 1 ? prev - 1 : 1)}
+            className="bg-[#45B69C] text-white font-semibold py-2 px-6 rounded-lg shadow-lg hover:bg-[#3D9B80] transition duration-200 transform hover:scale-105">
+            Previous
+          </button>
+          <button 
+            onClick={() => setPage(prev => prev < info.pages ? prev + 1 : prev)}
+            className="bg-[#45B69C] text-white font-semibold py-2 px-6 rounded-lg shadow-lg hover:bg-[#3D9B80] transition duration-200 transform hover:scale-105">
+            Next
+          </button>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-[#4CA1AF] text-white py-4 text-center shadow-md">
+        <p>&copy; 2024 Rick and Morty Fan Page</p>
+      </footer>
+    </div>
+  )
+}
+
+export default Home
+ChatGPT said:
+
+Got it 👍 thanks for sharing your existing pages/index.tsx. Since this already lists episodes, we won’t replace it with only the ErrorProneComponent—instead we’ll temporarily inject the error component just to test that your ErrorBoundary works.
+
+Here’s how you can adjust your file:
+
+✅ Updated pages/index.tsx
+import { useQuery } from "@apollo/client";
+import { GET_EPISODES } from "@/graphql/queries";
+import { EpisodeProps } from "@/interfaces";
+import EpisodeCard from "@/components/common/EpisodeCard";
+import { useEffect, useState } from "react";
+
+// Import the ErrorBoundary + ErrorProneComponent
+import ErrorBoundary from "@/components/ErrorBoundary";
+import ErrorProneComponent from "@/components/ErrorProneComponent";
+
+const Home: React.FC = () => {
+  const [page, setPage] = useState<number>(1);
+  const { loading, error, data, refetch } = useQuery(GET_EPISODES, {
+    variables: { page }
+  });
+
+  useEffect(() => {
+    refetch();
+  }, [page, refetch]);
+
+  if (loading) return <h1>Loading...</h1>;
+  if (error) return <h1>Error</h1>;
+
+  const results = data?.episodes.results;
+  const info = data?.episodes.info;
+
+  return (
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#A3D5E0] to-[#F4F4F4] text-gray-800">
+      {/* Header */}
+      <header className="bg-[#4CA1AF] text-white py-6 text-center shadow-md">
+        <h1 className="text-4xl font-bold tracking-wide">Rick and Morty Episodes</h1>
+        <p className="mt-2 text-lg italic">Explore the multiverse of adventures!</p>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-grow p-6">
+        {/* 🔥 Wrap the test component with ErrorBoundary */}
+        <ErrorBoundary>
+          <ErrorProneComponent />
+        </ErrorBoundary>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+          {results &&
+            results.map(
+              ({ id, name, air_date, episode }: EpisodeProps, key: number) => (
+                <EpisodeCard
+                  id={id}
+                  name={name}
+                  air_date={air_date}
+                  episode={episode}
+                  key={key}
+                />
+              )
+            )}
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-between mt-6">
+          <button
+            onClick={() => setPage((prev) => (prev > 1 ? prev - 1 : 1))}
+            className="bg-[#45B69C] text-white font-semibold py-2 px-6 rounded-lg shadow-lg hover:bg-[#3D9B80] transition duration-200 transform hover:scale-105"
+          >
+            Previous
+          </button>
+          <button
+            onClick={() =>
+              setPage((prev) => (prev < info.pages ? prev + 1 : prev))
+            }
+            className="bg-[#45B69C] text-white font-semibold py-2 px-6 rounded-lg shadow-lg hover:bg-[#3D9B80] transition duration-200 transform hover:scale-105"
+          >
+            Next
+          </button>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-[#4CA1AF] text-white py-4 text-center shadow-md">
+        <p>&copy; 2024 Rick and Morty Fan Page</p>
+      </footer>
+    </div>
+  );
+};
+
+export default Home;
+
+🔍 What Happens Now
+
+When you visit http://localhost:3000
+,
+the ErrorProneComponent will immediately throw an error.
+
+Instead of crashing the whole app, your ErrorBoundary will catch it and show the fallback UI (Oops, there is an error! with a "Try again?" button).
+
+The rest of your episode listing remains safe inside the page.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
